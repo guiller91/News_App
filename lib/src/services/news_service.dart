@@ -2,18 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../models/category_model.dart';
 import '../models/news_models.dart';
 import 'package:http/http.dart' as http;
 
 class NewsService with ChangeNotifier {
   List<Article> headlines = [];
+  bool _isLoading = true;
   List<Category> categories = [
     Category(FontAwesomeIcons.building, 'business'),
     Category(FontAwesomeIcons.tv, 'entertainment'),
     Category(FontAwesomeIcons.addressCard, 'general'),
-    Category(FontAwesomeIcons.headSideVirus, 'health'),
+    Category(FontAwesomeIcons.briefcaseMedical, 'health'),
     Category(FontAwesomeIcons.vials, 'science'),
     Category(FontAwesomeIcons.basketball, 'sports'),
     Category(FontAwesomeIcons.memory, 'technology'),
@@ -33,16 +33,18 @@ class NewsService with ChangeNotifier {
       categoryArticles[item.name] = [];
     }
   }
+  bool get isLoading => _isLoading;
 
-  get category => _category;
+  String get category => _category;
 
-  set category(value) {
+  set category(String value) {
     _category = value;
+    _isLoading = true;
     getArticlesByCategory(value);
     notifyListeners();
   }
 
-  List<Article>? get selectedArticles => categoryArticles[_category];
+  List<Article>? get selectedArticles => categoryArticles[category];
 
   getTopHeadlines() async {
     final url = Uri.https(_urlNews, '/v2/top-headlines', {
@@ -60,6 +62,8 @@ class NewsService with ChangeNotifier {
 
   getArticlesByCategory(String category) async {
     if (categoryArticles[category]!.isNotEmpty) {
+      _isLoading = false;
+      notifyListeners();
       return categoryArticles[category];
     }
 
@@ -74,6 +78,7 @@ class NewsService with ChangeNotifier {
     final newsResponse = newsResponseFromJson(resp.body);
 
     categoryArticles[category]?.addAll(newsResponse.articles);
+    _isLoading = false;
     notifyListeners();
   }
 }

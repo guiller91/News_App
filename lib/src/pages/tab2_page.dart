@@ -17,9 +17,25 @@ class Tab2Page extends StatelessWidget {
       body: Column(
         children: <Widget>[
           _CategoriesList(),
-          Expanded(
-            child: NewsList(newsService.selectedArticles!),
-          ),
+          if (newsService.isLoading)
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    CircularProgressIndicator(),
+                    SizedBox(height: 10),
+                    Text('Loading...'),
+                    SizedBox(height: 10),
+                    Text("if it's taking too long select a different category")
+                  ],
+                ),
+              ),
+            ),
+          if (!newsService.isLoading)
+            Expanded(
+              child: NewsList(newsService.selectedArticles!),
+            ),
         ],
       ),
     ));
@@ -31,7 +47,7 @@ class _CategoriesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = Provider.of<NewsService>(context).categories;
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 80,
       child: ListView.builder(

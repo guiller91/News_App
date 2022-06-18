@@ -1,11 +1,10 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:news_app/src/pages/tab1_page.dart';
 import 'package:news_app/src/pages/tab2_page.dart';
 import 'package:provider/provider.dart';
-
-import '../services/news_service.dart';
 
 class TabsPage extends StatelessWidget {
   @override
@@ -32,12 +31,12 @@ class _NavigationBar extends StatelessWidget {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: 'Para ti',
+          icon: Icon(FontAwesomeIcons.globe),
+          label: 'General',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.public_rounded),
-          label: 'Encabezados',
+          icon: Icon(FontAwesomeIcons.icons),
+          label: 'Categories',
         ),
       ],
     );
@@ -62,7 +61,7 @@ class _Pages extends StatelessWidget {
 
 class _NavegationModel with ChangeNotifier {
   int _currentPage = 0;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   int get currentPage => _currentPage;
 
