@@ -6,13 +6,26 @@ import 'package:provider/provider.dart';
 
 import '../services/news_service.dart';
 
-class Tab1Page extends StatelessWidget {
+class Tab1Page extends StatefulWidget {
+  @override
+  State<Tab1Page> createState() => _Tab1PageState();
+}
+
+class _Tab1PageState extends State<Tab1Page>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     final newsService = Provider.of<NewsService>(context);
 
     return Scaffold(
-      body: NewsList(newsService.headlines),
+      body: (newsService.headlines.isEmpty)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : NewsList(newsService.headlines),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
